@@ -1,0 +1,300 @@
+﻿@model IEnumerable<RepositoryLayer.Models.School>
+@{
+    ViewData["Title"] = "Add News";
+}
+
+<div class="row form-group">
+    <div class="col-2">
+        <label for="sel1" data-localize="add-news-type.self">News Type:</label>
+    </div>
+    <div class="col-10">
+        <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" class="custom-control-input" id="rdbNewsTypePublic" name="rdbNewsType" checked="checked" value="1">
+            <label class="custom-control-label" for="rdbNewsTypePublic" data-localize="add-news-type.public">Public</label>
+        </div>
+
+        <!-- Default inline 2-->
+        <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" class="custom-control-input" id="rdbNewsTypePrivate" name="rdbNewsType" value="2">
+            <label class="custom-control-label" for="rdbNewsTypePrivate" data-localize="add-news-type.private">Private</label>
+        </div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-2">
+        <label for="sel1" data-localize="add-news-school.self">School:</label>
+    </div>
+    <div class="col-10">
+        <div class="row">
+            <div class="col-3">
+                <label class="form-check-label" >
+                    <input type="checkbox" class="form-check-input" value="0" id="chkSelectAllSchools" ><p data-localize="add-news-school.value">All School</p>
+                </label>
+            </div>
+            @foreach (var item in Model)
+            {
+                <div class="col-3">
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input chkSelectedSchools" value="@item.SchoolId">@item.SchoolName
+                    </label>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-2">
+        <label for="sel1" data-localize="add-news-title.self">News Title:</label>
+    </div>
+    <div class="col-10">
+        <input type="text" class="form-control" id="txtNewsTitle" aria-describedby="divNewsTitleValidation">
+        <div id="divNewsTitleValidation" class="invalid-feedback" data-localize="add-news-title.error">
+            This field is mandetory
+        </div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-2">
+        <label for="sel1" data-localize="add-news-text.self">News Text:</label>
+    </div>
+    <div class="col-10">
+        <textarea id="txtNewsText"></textarea>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-2">
+        <label for="sel1"  data-localize="add-news-picture.self">News Picture:</label>
+    </div>
+    <div class="col-10">
+        <input type="file" id="fileNewsPicture" accept="image/*">
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-2">
+        <label for="sel1"  data-localize="add-news-attachments.self">News Attachments:</label>
+    </div>
+    <div class="col-10">
+        <input type="file" id="fileNewsAttachments" onchange="readAttachments(this);" multiple="multiple" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.slideshow, application/vnd.openxmlformats-officedocument.presentationml.presentation">
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-2">
+        <label for="sel1" data-localize="add-news-language.self">News Language:</label>
+    </div>
+    <div class="col-10">
+        <select class="form-select form-control" id="ddlSelectLanguage" aria-describedby="divNewsLanguageValidation">
+            <option value="0" selected disabled="disabled" data-localize="add-news-language.placeholder">Select any language</option>
+            <option value="2" data-localize="add-news-language.rtol">RTL</option>
+            <option value="1"  data-localize="add-news-language.ltor">LTR</option>
+        </select>
+        <div id="divNewsLanguageValidation" class="invalid-feedback" data-localize="add-news-language.error">
+            This field is mandetory
+        </div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-2">
+        <label for="sel1" data-localize="add-news-expiry-date.self">Expiry Date :</label>
+    </div>
+    <div class="col-10">
+        <div class="form-group">
+            <input type='text' class="form-control" id='dateNewsExpiry' aria-describedby="divNewsDateValidation" />
+            <div id="divNewsDateValidation" class="invalid-feedback"  data-localize="add-news-expiry-date.error">
+                Must be greater than Current date
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <button type="button" class="btn btn-primary" id="btnSaveNews" data-localize="add-news-save.self">Save</button>
+</div>
+
+
+
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+
+    <script>
+
+        $(function () {
+
+            tinymce.init({
+                selector: '#txtNewsText',  // change this value according to your HTML
+            });
+
+            //tinymce.init({
+            //    selector: '#txtNewsText',
+            //    toolbar: 'language',
+            //    content_langs: [
+            //        { title: 'English', code: 'en' },
+            //        { title: 'Arabic', code: 'ar' },
+            //    ],
+            //    directionality: 'rtl'
+            //});
+
+            $('#dateNewsExpiry').datetimepicker();
+
+            $('#chkSelectAllSchools').change(function () {
+                $('.chkSelectedSchools').prop("checked", $(this).is(":checked"));
+            });
+
+            $('#txtNewsTitle').change(function () {
+                $(this).removeClass('is-invalid');
+            });
+
+            $('#ddlSelectLanguage').change(function () {
+                $(this).removeClass('is-invalid');
+                if (parseInt($(this).val())== 2) {
+                    tinymce.remove('#txtNewsText');
+                    tinymce.init({
+                        selector: '#txtNewsText',  // change this value according to your HTML
+                        language: 'ar',
+                        language_url: '/lang/ar.js',
+                        directionality: 'rtl'
+                    });
+                }
+                else {
+                    tinymce.remove('#txtNewsText');
+                    tinymce.init({
+                        selector: '#txtNewsText',  // change this value according to your HTML
+                    });
+                }
+
+            });
+
+            $("#dateNewsExpiry").on("dp.change", function (e) {
+                $('#dateNewsExpiry').removeClass('is-invalid');
+            });
+
+            $('.chkSelectedSchools').change(function () {
+                if ($('.chkSelectedSchools:checked').length == $('.chkSelectedSchools').length) {
+                    $('#chkSelectAllSchools').prop("checked", true);
+                }
+                else {
+                    $('#chkSelectAllSchools').prop("checked", false);
+                }
+            });
+
+            $('#fileNewsPicture').on('change', function (e) {
+                let file = null;
+                file = e.target.files[0];
+                news_picture = file;
+            });
+
+            $('#btnSaveNews').click(function () {
+                $('#txtNewsTitle').removeClass('is-invalid');
+                $('#ddlSelectLanguage').removeClass('is-invalid');
+                $('#dateNewsExpiry').removeClass('is-invalid');
+                let is_valid = true;
+                let news_title = $('#txtNewsTitle').val();
+                if (news_title == '') {
+                    $('#txtNewsTitle').addClass('is-invalid');
+                    is_valid = false;
+                }
+                let news_language = parseInt($('#ddlSelectLanguage').val());
+                if (isNaN(news_language) || news_language == 0) {
+                    $('#ddlSelectLanguage').addClass('is-invalid');
+                    is_valid = false;
+                }
+
+                let expiry_date = $('#dateNewsExpiry').val();
+                let parsed_time = null;
+                if (expiry_date != '') {
+                    let current_time = moment();
+                    let parsed_time = moment(expiry_date);
+                    if (parsed_time < current_time) {
+                        $('#dateNewsExpiry').addClass('is-invalid');
+                        is_valid = false;
+                    }
+                }
+                news_text = tinyMCE.editors[$('#txtNewsText').attr('id')].getContent();
+                news_type = parseInt($('input[name=rdbNewsType]:checked').val());
+                let selected_schools = [];
+                $(".chkSelectedSchools:checked").each(function (index) {
+                    selected_schools.push(parseInt($(this).val()));
+                });
+                if (is_valid) {
+                    if (window.FormData !== undefined) {
+                        // Create FormData object  
+                        var fileData = new FormData();
+ 
+                        if (news_picture != null) {
+                            fileData.append('F'+news_picture.name, news_picture);
+                        }
+
+                        for (var i = 0; i < NewsAttachments.length; i++) {
+                            fileData.append(NewsAttachments[i].file_name, NewsAttachments[i].file_obj);
+                        }
+                     
+                        // Adding one more key to FormData object  
+                        fileData.append('ExipiryTime', expiry_date);
+                        fileData.append('NewsText', news_text);
+                        fileData.append('NewsTitle', news_title);
+                        fileData.append('LanguageDir', news_language);
+                        fileData.append('NewsType', news_type);
+                        fileData.append('SelectedSchools', selected_schools.join());
+
+                        $.ajax({
+                            url: '/News/AddNews',
+                            type: "POST",
+                            contentType: false, // Not to set any content header  
+                            processData: false, // Not to process data  
+                            data: fileData,
+                            success: function (result) {
+                                let Converter = $('#arabicConverter').text();
+                                if (Converter == 'EN') {
+                                    alertify
+                                        .confirm('أخبار', "اضيف بنجاح.", function () {
+                                            window.location.href = '/';
+                                        }, function () {
+                                            $('#txtNewsTitle').val('');
+                                            tinyMCE.editors[$('#txtNewsText').attr('id')].setContent('');
+                                        }).set('labels', { ok: 'نعم', cancel: 'أضف آخر' });
+                                }
+                                else {
+                                    alertify
+                                        .confirm('News', "Added successfully.", function () {
+                                            window.location.href = '/';
+                                        }, function () {
+                                            $('#txtNewsTitle').val('');
+                                            tinyMCE.editors[$('#txtNewsText').attr('id')].setContent('');
+                                        }).set('labels', { ok: 'Ok', cancel: 'Add Another' });
+                                }
+                            },
+                            error: function (err) {
+                                alert(err.statusText);
+                            }
+                        });
+                    } else {
+                        alert("FormData is not supported.");
+                    } 
+                }
+            });
+
+        });
+
+        var news_picture = null;
+
+        var NewsAttachments = [];
+
+        function readAttachments(input) {
+            NewsAttachments = [];
+            if (input.files && input.files[0]) {
+                for (var i = 0; i < input.files.length; i++) {
+                    let attachment_object = new Object();
+                    attachment_object.file_obj = input.files[i];
+                    attachment_object.file_name = 'A' + input.files[i].name;
+                    NewsAttachments.push(attachment_object);
+                }
+            }
+        }
+    </script>
+

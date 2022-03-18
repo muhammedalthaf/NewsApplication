@@ -1,0 +1,61 @@
+﻿@model RepositoryLayer.Models.News
+@{
+    ViewData["Title"] = "GetNews";
+}
+
+<div style="display:flex; justify-content: space-between">
+    <a style="color:blue">
+        @Model.NewsTitle
+    </a>
+
+    <a style="color:green">
+        @Model.CreatedDate.ToString("dd-MMM-yyyy")
+    </a>
+
+</div>
+
+<div style="display: flex; justify-content: center; padding: 30px;">
+    @if (string.IsNullOrEmpty(Model.NewsImage))
+    {
+        <img style="width:100px; height:100px;" src="/not-found.png" alt="" />
+    }
+    else
+    {
+        <img style="width:100px; height:100px;" src="/Uploads/@Model.NewsImage" alt="Image Not Found" />
+    }
+</div>
+
+<div style="display: flex; justify-content: center; padding: 30px; overflow-wrap: anywhere;">
+    @Html.Raw(Model.NewsText)
+</div>
+
+<div>
+    <h6>
+        Schools Selected
+    </h6>
+    <ul>
+        @foreach (var item in Model.Schools)
+        {
+            <li>
+                @item.SchoolName
+            </li>
+        }
+    </ul>
+</div>
+
+<div>
+    <h6>
+        Attachments
+    </h6>
+    <ul>
+        @foreach (var item in Model.NewsAttachment)
+        {
+            <li>
+                <a href="/Uploads/@item.AttachmentUrl"> @item.AttachmentUrl</a>
+            </li>
+        }
+    </ul>
+</div>
+
+
+

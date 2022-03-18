@@ -1,0 +1,77 @@
+﻿{
+  "add-news-type": {
+    "self": "نوع الأخبار",
+    "public": "عامة",
+    "private": "نشر"
+  },
+  "add-news-school": {
+    "self": ":مدرسة",
+    "value": "كل المدرسة"
+  },
+  "add-news-title": {
+    "self": ":عنوان الخبر:",
+    "error": "هذا المجال إلزامي"
+  },
+  "add-news-text": {
+    "self": "نص الأخبار"
+  },
+
+  "add-news-picture": {
+    "self": "صورة الأخبار:"
+  },
+
+  "add-news-attachments": {
+    "self": "مرفقات الأخبار:"
+  },
+
+  "add-news-language": {
+    "self": "لغة الأخبار:",
+    "placeholder": "حدد أي لغة",
+    "rtol": "من اليمين الى اليسار",
+    "ltor": "من اليسار إلى اليمين",
+    "error": "هذا المجال إلزامي"
+  },
+
+  "add-news-save": {
+    "self": "حفظ"
+  },
+
+    "add-news-expiry-date": {
+      "self": "تاريخ الانتهاء",
+      "error": "يجب أن يكون أكبر من التاريخ الحالي"
+    },
+
+    "news-link": {
+      "self": "أخبار"
+    },
+
+    "news-tab": {
+      "week": "أسبوعي",
+      "month": "شهريا",
+      "alltime": "كل الوقت"
+    },
+
+    "news-button": {
+      "self": "أضف أخبار"
+    },
+
+    "news-read-more": {
+      "self": "اقرأ أكثر.."
+    },
+
+
+
+    "password": {
+      "self": "كلمه السر",
+      "placeholder": "كلمه السر"
+    },
+    "language": "لغة",
+    "rememberme": {
+      "self": "تذكرنى",
+      "title": "إذا تم تحديدها ؛ ثم سيتم حفظ بيانات الاعتماد على متصفحك حتى تقوم بمسحها أو تسجيل الخروج."
+    },
+    "signin": "تسجيل الدخول",
+    "assistance": {
+      "self": "هل تواجه مشكلة في تسجيل الدخول؟ يرجى الاتصال بمكتب المساعدة الخاص بنا"
+    }
+  }

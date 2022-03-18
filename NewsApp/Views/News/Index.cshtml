@@ -1,0 +1,147 @@
+﻿@model IEnumerable<RepositoryLayer.Models.News>
+@{
+    ViewData["Title"] = "News-List";
+}
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" style="cursor:pointer;" id="tabweekly" onclick="OnTab(-7, 'tabweekly')" data-localize="news-tab.week">Weekly</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="tabmonthly" style="cursor:pointer;" onclick="OnTab(-30, 'tabmonthly')" data-localize="news-tab.month">Monthly</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="taball" style="cursor:pointer;" onclick="OnTab(0, 'taball')" data-localize="news-tab.alltime">All Time</a>
+    </li>
+
+    <li style="margin-left: auto;">
+        <a type="button" class="btn btn-primary" asp-area="" asp-controller="News" asp-action="AddNew" data-localize="news-button.self">Add New</a>
+    </li>
+</ul>
+
+<table style="width: 100%;padding-top:10px;" id="tblNews">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <div style="display: flex; justify-content: start; max-height: 120px; height: 120px; margin: 10px 0px;">
+                    <div style="margin-right:20px;">
+                        @if (string.IsNullOrEmpty(item.NewsImage))
+                        {
+                            <img style="width:100px; height:100px;" src="/not-found.png" alt="" />
+                        }
+                        else
+                        {
+                            <img style="width:100px; height:100px;" src="/Uploads/@item.NewsImage" alt="Image Not Found" />
+                        }
+                    </div>
+                    <div style=" flex: auto; ">
+                        <a style="color:green; float: right;">@item.CreatedDate.ToString("dd-MMM-yyyy")</a>
+                        <span style="color:darkred">
+                            @item.NewsTitle
+                        </span>
+                        <div style="width: 50vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;height:76px">
+                            @if (string.IsNullOrEmpty(item.NewsText))
+                            {
+                                <a>No Data</a>
+                            }
+                            else
+                            {
+                                @Html.Raw(item.NewsText)
+
+
+                            }
+
+                        </div>
+                        @if (!string.IsNullOrEmpty(item.NewsText))
+                        {
+                            <a style="color:blue; float: right;" asp-controller="News" asp-action="GetNews" asp-route-id="@item.NewsId" data-localize="news-read-more.self">Read more.</a>
+                        }
+                    </div>
+                </div>
+            </td>
+        </tr>
+    }
+</table>
+
+<script>
+
+    $(function () {
+
+    });
+
+    function OnTab(DayIndex, selected_tab) {
+        $('.nav-tabs .nav-link').removeClass('active');
+        $('#' + selected_tab).addClass('active');
+        $.ajax({
+            url: "/News/GetAll?thresoldValue=" + DayIndex,
+            type: 'GET',
+            dataType: 'json', // added data type
+            success: function (res) {
+                console.log(res);
+                setHtml(res);
+            }
+        });
+    }
+
+    function setHtml(NewsData) {
+
+        $('#tblNews').empty();
+
+        let finalHtml = '';
+        for (var indexer = 0; indexer < NewsData.length; indexer++) {
+            data = NewsData[indexer];
+            console.log(data);
+            let imageTagHtml = '<img style="width:100px; height:100px;" src="/not-found.png" alt="" />';
+            if (data.newsImage != null) {
+                imageTagHtml = '<img style="width:100px; height:100px;" src="/Uploads/' + data.newsImage + '" alt="Image Not Found" />';
+            }
+
+            let created_date = moment(data.CreatedDate).format('DD-MMM-YYYY')
+
+            let newsText = '<a>No Data</a>';
+            let Readmore = '';
+            if (data.newsText != null) {
+                newsText = data.newsText;
+                Readmore = '<a style="color:blue; float: right;" asp-controller="News" asp-action="GetNews" asp-route-id="${data.NewsId}" data-localize="news-read-more.self">Read more.</a>'
+            }
+
+            finalHtml += `
+                <tr>
+                    <td>
+                        <div style="display: flex; justify-content: start; max-height: 120px; height: 120px; margin: 10px 0px;">
+                            <div style="margin-right:20px;">
+                                ${imageTagHtml}
+
+                            </div>
+                            <div style=" flex: auto; ">
+                                <a style="color:green; float: right;">${created_date}</a>
+                                <span style="color:darkred">
+                                    ${data.newsTitle}
+                                </span>
+                                <div style="width: 50vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;height:76px">
+                                    ${newsText}
+
+                                </div>
+
+                                    ${Readmore}
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>`
+        }
+        $('#tblNews').html(finalHtml);
+        ResetToPreLocalization();
+        StorePreLocalization();
+
+        let Converter = $('#arabicConverter').text();
+        if (Converter == 'EN') {
+            let _filePath = '/lang';
+            let _langOpts = { language: "ar", pathPrefix: _filePath };
+            $("[data-localize]").localize('add', _langOpts);
+            $(this).text('EN');
+        }
+    }
+</script>
+
